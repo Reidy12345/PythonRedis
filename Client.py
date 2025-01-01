@@ -22,6 +22,41 @@ def start_client():
 
 def to_redis_protocol(command):
     
+    flush_pattern = r'FLUSH'  
+    match = re.match(flush_pattern, command)
+    if match:        
+        return '$5\r\nFLUSH\r\n'.encode('utf-8')
+
+    simple_get_pattern = r'GET (\w+)'    
+    match = re.match(simple_get_pattern, command)
+    if match:
+        key = match.group(1)
+                        
+        encoded_command = '*2\r\n'        
+        for part in ['SET', key]:
+            encoded_command += "$"
+            encoded_command += str(len(part))
+            encoded_command += "\r\n"
+            encoded_command += part
+            encoded_command += "\r\n"
+        
+        return encoded_command.encode('utf-8')
+    
+    simple_delete_pattern = r'DELETE (\w+)'    
+    match = re.match(simple_delete_pattern, command)
+    if match:
+        key = match.group(1)
+                        
+        encoded_command = '*2\r\n'        
+        for part in ['DELETE', key]:
+            encoded_command += "$"
+            encoded_command += str(len(part))
+            encoded_command += "\r\n"
+            encoded_command += part
+            encoded_command += "\r\n"
+        
+        return encoded_command.encode('utf-8')
+    
     simple_set_pattern = r'SET (\w+) (\w+)'    
     match = re.match(simple_set_pattern, command)
     if match:

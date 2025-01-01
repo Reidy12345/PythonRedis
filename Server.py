@@ -4,7 +4,6 @@ from config import HOST, PORT
 database = {}
 
 def handle_request(request):
-    print(f"Decoded command: {request}")
     return 'test'
 
 def start_server():
@@ -22,7 +21,7 @@ def start_server():
                     data = conn.recv(1024).decode('utf-8')
                     if not data:
                         break
-                    print(f"Received: {data.strip()}")
+                    print(f"Received: {repr(data)}")
                     response = handle_request(data)
                     conn.sendall(response.encode('utf-8'))
 

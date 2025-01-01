@@ -25,7 +25,7 @@ def to_redis_protocol(command):
     flush_pattern = r'FLUSH'  
     match = re.match(flush_pattern, command)
     if match:        
-        return '$5\r\nFLUSH\r\n'.encode('utf-8')
+        return '$1\r\nFLUSH\r\n'.encode('utf-8')
 
     simple_get_pattern = r'GET (\w+)'    
     match = re.match(simple_get_pattern, command)

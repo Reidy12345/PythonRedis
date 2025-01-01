@@ -6,16 +6,10 @@ In an effort to understand Redis a little under the hood, we create a mini versi
 - SET \<key> \<value>
 - DELETE \<key>
 - FLUSH
-- MGET \<key 1> ... \<key n>
-- MSET \<key 1> \<valu 1> ... \<key n> \<value n>
 
 And will support the following data types
 
-- Strings and Binary Data
-- Numbers
-- NULL
-- Arrays (which may be nested)
-- Dictionaries (which may be nested)
-- Error messages
+- Strings
+- String Arrays
 
-This repo follows the instruction of this tutorial https://charlesleifer.com/blog/building-a-simple-redis-server-with-python/
+For extra reading, and to add more features, see https://charlesleifer.com/blog/building-a-simple-redis-server-with-python/ and https://redis.io/docs/latest/develop/reference/protocol-spec/

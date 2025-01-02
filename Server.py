@@ -10,17 +10,19 @@ database = {}
 
 def handle_request(request):
     
-    parts = from_protocol_array(request)
-    # print(parts)
-    
+    parts = from_protocol_array(request)    
     command = parts[0]
-    # print('command', command)
-    
+        
     if command == 'SET':
         
-        key = parts[1]
-        value = parts[2]
-        database[key] = value
+        if len(parts) == 3:
+            key = parts[1]
+            value = parts[2]
+            database[key] = value
+        else:
+            key = parts[1]
+            value = parts[2:]
+            database[key] = value
         
         return to_protocol_simple_string('OK')
     
@@ -29,7 +31,10 @@ def handle_request(request):
         key = parts[1]
         value = database.get(key, 'None')
         
-        return to_protocol_simple_string(value)
+        if isinstance(value, str):
+            return to_protocol_simple_string(value)
+        else:
+            return to_protocol_array(value)
          
     elif command == 'DELETE':
         

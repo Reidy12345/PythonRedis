@@ -1,6 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM
 from string import Template
-from ProtcolHandler import from_protocol_simple_string, to_redis_protocol
+from ProtcolHandler import from_protocol_simple_string, to_redis_protocol, from_protocol_array
 from config import HOST, PORT
 
 def start_client():
@@ -19,8 +19,12 @@ def start_client():
             response = client_socket.recv(1024).decode('utf-8')
             print(f"Response: {repr(response)}")
             
-            decoded_response = from_protocol_simple_string(response)
-            print(f"Decoded Response: {decoded_response}")
+            if response[0] == '+': # simple String
+                decoded_response = from_protocol_simple_string(response)
+                print(f"Decoded Response: {decoded_response}")
+            elif response[0] == '*': # list
+                decoded_response = from_protocol_array(response)
+                print(f"Decoded Response: {decoded_response}")
 
 if __name__ == "__main__":
     start_client()

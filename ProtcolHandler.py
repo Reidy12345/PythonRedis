@@ -49,11 +49,11 @@ def to_redis_protocol(command):
         key = match.group(1)
         return to_protocol_array(['DELETE', key])
     
-    simple_set_pattern = r'SET (\w+) (\w+)'    
+    simple_set_pattern = r"SET((?:\s+\S+)*)"  
     match = re.match(simple_set_pattern, command)
     if match:
-        key = match.group(1)
-        value = match.group(2)
-        return to_protocol_array(['SET', key, value])
+        values = match.group(1).strip().split()
+        print('values', values)
+        return to_protocol_array(['SET'] + values)
     
     raise Exception('Command pattern is not supported', command)

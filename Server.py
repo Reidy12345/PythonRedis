@@ -3,8 +3,6 @@ import sys
 from ProtcolHandler import from_protocol_array, to_protocol_array, to_protocol_simple_string
 from config import HOST, PORT
 
-OK_RESPONSE = to_protocol_simple_string('OK')
-
 database = {}
 
 def handle_request(request):

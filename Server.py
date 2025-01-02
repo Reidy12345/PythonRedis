@@ -3,8 +3,7 @@ import sys
 from ProtcolHandler import from_protocol_array, to_protocol_array, to_protocol_simple_string
 from config import HOST, PORT
 
-OKAY = r'+OK\r\n'
-ERROR = r'+ERR\r\n'
+OK_RESPONSE = to_protocol_simple_string('OK')
 
 database = {}
 
@@ -14,20 +13,13 @@ def handle_request(request):
     command = parts[0]
         
     if command == 'SET':
-        
-        if len(parts) == 3:
-            key = parts[1]
-            value = parts[2]
-            database[key] = value
-        else:
-            key = parts[1]
-            value = parts[2:]
-            database[key] = value
+        key = parts[1]
+        value = parts[2] if len(parts) == 3 else parts[2:]
+        database[key] = value
         
         return to_protocol_simple_string('OK')
     
     elif command == 'GET':
-        
         key = parts[1]
         value = database.get(key, 'None')
         
@@ -37,16 +29,14 @@ def handle_request(request):
             return to_protocol_array(value)
          
     elif command == 'DELETE':
-        
         key = parts[1]
-        database.pop(key)
         
-        return to_protocol_simple_string('OK')
+        if key in database:
+            database.pop(key)
+            return to_protocol_simple_string('OK')
     
     elif command == 'FLUSH':
-        
         database.clear()
-        
         return to_protocol_simple_string('OK')
     
 def start_server():

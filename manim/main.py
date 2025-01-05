@@ -69,7 +69,7 @@ class ServerCode(Scene):
         
         self.play(FadeOut(part1, part2, part3, part4))
 
-class ProtocolExplainer(Scene):
+class ProtocolExplainerString(Scene):
     
     def construct(self):
         # Create the "SET" text
@@ -105,35 +105,76 @@ class ProtocolExplainer(Scene):
         # Fade out everything
         self.play(FadeOut(set_text, protocol_text))
         
-        # Create the "SET" text
-        set_name_alice_text = Text("SET name Alice").scale(1.5)
+
+class ProtocolExplainerArray(Scene):
+    def construct(self):
+        
+        set_name_alice_text = Text("SET  name  Alice").scale(1.5)
         set_name_alice_text.shift(UP * 2)
         self.play(Write(set_name_alice_text))
-        self.wait(2)
+        self.wait(0.5)
         
-        # Protocol text bits
-        protocol_bits = [
-            "*<array_length> \\r\\n element 1 \\r\\n ... \\r\\n element N \\r\\n",
-            "*3 \\r\\n element 1 \\r\\n element 2 \\r\\n element 3 \\r\\n",
-            "*3 \\r\\n $3\\r\\nSET \\r\\n $4\\r\\nname \\r\\n $5\\r\\nAlice \\r\\n",
-            "*3\\r\\n$3\\r\\nSET\\r\\n$4\\r\\nname\\r\\n$5\\r\\nAlice\\r\\n",
-            "*3\r\n$3\r\nSET\r\n$4\r\nname\r\n$5\r\nAlice\r\n",
-        ]
+        full_text = r"*3\\r\\n$3\\r\\nSET\\r\\n$4\\r\\nname\\r\\n$5\\r\\nAlice\\r\\n"
+        font_size=36
+        
+        text = Text(full_text, font_size=font_size, color=BLACK)
+        self.add(text)
+        
+        reveal_sequence = [1,1,6,11,6,12,6,13,6] 
+        current_index = 0
+        
+        under_line_level_start = UP * 1.5 + LEFT * 3.5
+        
+        set_line = Line(start=under_line_level_start, end=under_line_level_start + RIGHT * 1.7, color=WHITE)
+        space_one_line = Line(start=set_line.get_end() + RIGHT * 0.05, end=set_line.get_end() + RIGHT * 0.37 , color=WHITE)
+        name_line = Line(start=space_one_line.get_end() + RIGHT * 0.1, end=space_one_line.get_end() + RIGHT * 2.25, color=WHITE)
+        space_two_line = Line(start=name_line.get_end() + RIGHT * 0.1, end=name_line.get_end() + RIGHT * 0.38, color=WHITE)
+        alice_line = Line(start=space_two_line.get_end() + RIGHT * 0.1, end=space_two_line.get_end() + RIGHT * 2.4, color=WHITE)
+        
+        lines = dict()
+        lines[3] = set_line
+        lines[4] = space_one_line
+        lines[5] = name_line
+        lines[6] = space_two_line
+        lines[7] = alice_line
+        
+        line = None
+        
+        # Reveal the characters step by step
+        for step_idx, step in enumerate(reveal_sequence):
+            
+            # move the line over the SET name Alice
+            current_line = lines.get(step_idx)
+            if current_line is not None:
+                
+                if line is None:
+                    line = current_line
+                    self.play(Create(line), run_time=1)
+                else:
+                    self.play(Transform(line, current_line), run_time=1)
+                
+            next_index = current_index + step
 
-        # Create the initial protocol text
-        protocol_text = Text(protocol_bits[0]).scale(0.7)
-        protocol_text.next_to(set_text, DOWN, buff=1)
+            revealed_text = Text(
+                full_text, font_size=font_size
+            ).move_to(ORIGIN)
+            
+            for j in range(len(full_text)):
+                if j < next_index:
+                    revealed_text[j].set_color(WHITE)
+                else:
+                    revealed_text[j].set_color(BLACK)
 
-        # Add the initial protocol text to the scene
-        self.play(Write(protocol_text))
+            self.play(Transform(text, revealed_text), run_time=1)
+
+            current_index = next_index
+            self.wait(0.2)
+                
+        final_text_data = "*3\r\n$3\r\nSET\r\n$4\r\nname\r\n$5\r\nAlice\r\n"
+        final_text = Text(final_text_data, font_size=font_size).shift(DOWN)
+        self.play(Transform(text, final_text), FadeOut(line))
+ 
         self.wait(2)
-
-        # Transform the protocol text to reveal each bit
-        for bit in protocol_bits[1:]:
-            new_protocol_text = Text(bit).scale(0.7)
-            new_protocol_text.next_to(set_text, DOWN, buff=1)  # Keep it center-aligned
-            self.play(Transform(protocol_text, new_protocol_text))
-            self.wait(2)
 
 class DisplayRedisLogo(Scene):
     def construct(self):

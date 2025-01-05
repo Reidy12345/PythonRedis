@@ -318,3 +318,94 @@ class HowRedisWorks(Scene):
         self.wait(2)
         
         self.play(FadeOut(database), FadeOut(user), FadeOut(arrow_to_db), FadeOut(arrow_to_user), FadeOut(key_value), FadeOut(key_value_2))
+
+class WhyUseRedisPt1(Scene):
+    def construct(self):
+        
+        redis_image = ImageMobject("redis_logo.png").scale(0.7)
+        self.add(redis_image)
+
+        self.play(FadeIn(redis_image))
+        self.wait(2)
+        
+        self.play(redis_image .animate.move_to(LEFT * 2).scale(0.7))
+        
+        postgres_image = ImageMobject("postgres_logo.png").scale(0.7)
+        postgres_image.move_to(RIGHT * 2 + UP * 1.3   ) 
+        
+        couchbase_image = ImageMobject("couchbase.png").scale(0.1)
+        couchbase_image.next_to(postgres_image, DOWN, buff=0.5)
+                
+        self.play(FadeIn(postgres_image, couchbase_image))
+        self.wait(2)
+        
+        self.play(FadeOut(redis_image, postgres_image, couchbase_image))
+        self.wait(2)
+
+class WhyUseRedisPt2(Scene):
+    def construct(self):
+        
+        user = ImageMobject("user.png")
+        user.scale(2.5)
+        user.set_color(WHITE)
+        user.move_to(LEFT * 4) 
+                
+        redis_image = ImageMobject("redis_logo.png").scale(0.5)
+        redis_image.move_to(RIGHT * 4 + UP * 2) 
+                
+        postgres_image = ImageMobject("postgres_logo.png").scale(0.7)
+        postgres_image.move_to(RIGHT * 4 + DOWN * 2)    
+             
+        self.play(FadeIn(user, redis_image, postgres_image))
+        self.wait(2)
+        
+        curve_angle = -0.1
+        
+        user_to_redis = ArcBetweenPoints(
+            start=user.get_right() + UP * 0.2, 
+            end=redis_image.get_left() + LEFT * 0.2, 
+            angle=curve_angle,  # Controls the curvature
+            color=RED
+        )
+        
+        redis_to_user = ArcBetweenPoints(
+            start=redis_image.get_left() + LEFT * 0.2, 
+            end=user.get_right() + UP * 0.2, 
+            angle=curve_angle,  # Controls the curvature
+            color=RED
+        )
+
+        user_to_postgres = ArcBetweenPoints(
+            start=user.get_right() + DOWN * 0.2, 
+            end=postgres_image.get_left(), 
+            angle=curve_angle,  # Controls the curvature
+            color=BLUE
+        )
+
+        postgres_to_user = ArcBetweenPoints(
+            start=postgres_image.get_left(), 
+            end=user.get_right() + DOWN * 0.2, 
+            angle=curve_angle,  # Controls the curvature
+            color=BLUE
+        )
+        
+        redis_speed = 3
+        postgres_speed = 5
+        self.play(
+            AnimationGroup(
+                Succession(
+                    Create(user_to_redis, run_time=redis_speed, rate_func=linear),
+                    Create(redis_to_user, run_time=redis_speed, rate_func=linear)
+                ),
+                Succession(
+                    Create(user_to_postgres, run_time=postgres_speed, rate_func=linear),
+                    Create(postgres_to_user, run_time=postgres_speed, rate_func=linear)
+                ),
+                lag_ratio=0
+            )
+        )
+        
+        self.wait(2)
+        
+        self.play(FadeOut(*self.mobjects))
+        self.wait(2)

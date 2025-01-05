@@ -70,40 +70,47 @@ class ServerCode(Scene):
         self.play(FadeOut(part1, part2, part3, part4))
 
 class ProtocolExplainerString(Scene):
-    
-    def construct(self):
-        # Create the "SET" text
+     def construct(self):
+        
         set_text = Text("SET").scale(1.5)
         set_text.shift(UP * 2)
         self.play(Write(set_text))
+        self.wait(0.5)
+        
+        full_text = r"$3\\r\\nSET\\r\\n"
+        font_size=48
+        
+        text = Text(full_text, font_size=font_size, color=BLACK)
+        self.add(text)
+        
+        reveal_sequence = [1,1,6,3,6] 
+        current_index = 0
+        
+        # Reveal the characters step by step
+        for step_idx, step in enumerate(reveal_sequence):
+                    
+            next_index = current_index + step
+
+            revealed_text = Text(
+                full_text, font_size=font_size
+            ).move_to(ORIGIN)
+            
+            for j in range(len(full_text)):
+                if j < next_index:
+                    revealed_text[j].set_color(WHITE)
+                else:
+                    revealed_text[j].set_color(BLACK)
+
+            self.play(Transform(text, revealed_text), run_time=1)
+
+            current_index = next_index
+            self.wait(0.2)
+                
+        final_text_data = "$3\r\nSET\r\n"
+        final_text = Text(final_text_data, font_size=font_size)
+        self.play(Transform(text, final_text))
+ 
         self.wait(2)
-
-        # Protocol text bits
-        protocol_bits = [
-            "$3",
-            "$3 SET",
-            "$3\\r\\nSET",
-            "$3\\r\\nSET\\r\\n",
-            "$3\r\nSET\r\n",
-        ]
-
-        # Create the initial protocol text
-        protocol_text = Text(protocol_bits[0]).scale(1.5)
-        protocol_text.next_to(set_text, DOWN, buff=1)
-
-        # Add the initial protocol text to the scene
-        self.play(Write(protocol_text))
-        self.wait(2)
-
-        # Transform the protocol text to reveal each bit
-        for bit in protocol_bits[1:]:
-            new_protocol_text = Text(bit).scale(1.5)
-            new_protocol_text.next_to(set_text, DOWN, buff=1)  # Keep it center-aligned
-            self.play(Transform(protocol_text, new_protocol_text))
-            self.wait(2)
-
-        # Fade out everything
-        self.play(FadeOut(set_text, protocol_text))
         
 
 class ProtocolExplainerArray(Scene):

@@ -204,14 +204,18 @@ class DisplayRedisLogo(Scene):
 
 class Objectives(Scene):
     def construct(self):
-        # Load the image
-        objective_1 = Text("Create a simple Redis Server").scale(1)
-        objective_2 = Text("Create a simple Redis Client").scale(1)
-        objective_3 = Paragraph("Use the Redis Protocol for", "Sending and Receiving Messages", alignment='center').scale(1)
+        objective_1 = Text("Understand the Basics of the Redis Protocol").scale(1)
+        objective_2 = Text("Create a simple Redis Client and Server that").scale(1)
+        objective_2a = Paragraph("Can store and get", "strings and arrays", "of strings", alignment='center').scale(0.8)
+        objective_2b = Paragraph("Uses the Redis Protocol", "for Sending and", "Receiving messages", alignment='center').scale(0.8)        
         
         objective_1.shift(UP * 2)
         objective_2.next_to(objective_1, DOWN, buff=1)
-        objective_3.next_to(objective_2, DOWN, buff=1)
+        objective_2a.next_to(objective_2, DOWN, buff=1)
+        objective_2b.next_to(objective_2, DOWN, buff=1)
+        
+        objective_2a.shift(LEFT * 3)
+        objective_2b.shift(RIGHT * 3)
 
         self.play(Write(objective_1))
         self.wait(2)
@@ -219,10 +223,13 @@ class Objectives(Scene):
         self.play(Write(objective_2))
         self.wait(2)
         
-        self.play(Write(objective_3))
+        self.play(Write(objective_2a))
         self.wait(2)
         
-        self.play(FadeOut(objective_1, objective_2, objective_3))
+        self.play(Write(objective_2b))
+        self.wait(2)
+        
+        self.play(FadeOut(*self.mobjects))
 
 
 class KeyValueExplainer(Scene):

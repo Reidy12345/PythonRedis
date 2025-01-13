@@ -20,27 +20,23 @@ class ClientCode(Scene):
         part1 = VGroup(*code.code[:5])
         part2 = VGroup(*code.code[5:7])
         part3 = VGroup(*code.code[7:9])
-        part4 = VGroup(*code.code[9:12])
-        part5 = VGroup(*code.code[12:15])
-        part6 = VGroup(*code.code[15:])
+        part4 = VGroup(*code.code[9:15])
+        part5 = VGroup(*code.code[15:])
 
-        self.play(Write(part1), run_time=3)
-        self.wait(2)
+        self.play(Write(part1), run_time=5)
+        self.wait(15)
 
         self.play(Write(part2), run_time=3)
-        self.wait(2)
+        self.wait(15)
 
         self.play(Write(part3), run_time=3)
-        self.wait(2)
+        self.wait(15)
 
-        self.play(Write(part4), run_time=3)
-        self.wait(2)
+        self.play(Write(part4), run_time=5)
+        self.wait(10)
 
-        self.play(Write(part5), run_time=3)
-        self.wait(2)
-
-        self.play(Write(part6), run_time=3)
-        self.wait(2)
+        self.play(Write(part5), run_time=5)
+        self.wait(10)
 
         self.play(FadeOut(*self.mobjects))
 
@@ -51,7 +47,7 @@ class ServerCode(Scene):
         # TODO: Maybe add the imports also?
         with open("../Server.py", "r") as file:
             all_lines = file.readlines()
-            python_code = "".join(all_lines[39:58])
+            python_code = "".join(all_lines[40:58])
 
         # Create a Code object with the Python code
         code = Code(
@@ -67,20 +63,16 @@ class ServerCode(Scene):
 
         part1 = VGroup(*code.code[:7])
         part2 = VGroup(*code.code[7:11])
-        part3 = VGroup(*code.code[11:17])
-        part4 = VGroup(*code.code[17:])
+        part3 = VGroup(*code.code[11:])
 
-        self.play(Write(part1), run_time=3)
-        self.wait(2)
+        self.play(Write(part1), run_time=5)
+        self.wait(5)
 
-        self.play(Write(part2), run_time=3)
-        self.wait(2)
+        self.play(Write(part2), run_time=5)
+        self.wait(5)
 
-        self.play(Write(part3), run_time=3)
-        self.wait(2)
-
-        self.play(Write(part4), run_time=3)
-        self.wait(2)
+        self.play(Write(part3), run_time=5)
+        self.wait(5)
 
         self.play(FadeOut(*self.mobjects))
 
@@ -678,3 +670,42 @@ class Benchmarks(Scene):
 
         self.play(FadeOut(*self.mobjects))
         self.wait(2)
+
+
+class ToRedisProtocolMethod(Scene):
+    def construct(self):
+
+        with open("../ProtcolHandler.py", "r") as file:
+            all_lines = file.readlines()
+            python_code = "".join(all_lines[36:])
+
+        initial_scale = 1
+        final_scale = 0.68
+
+        code = Code(
+            code=python_code,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",
+            language="python",
+        ).scale(initial_scale)
+
+        part1_code = VGroup(*code.code[:7])
+        part2_code = VGroup(*code.code[7:]).scale(final_scale)
+
+        part1_code.move_to(ORIGIN)
+        self.play(Write(part1_code), run_time=3)
+        self.wait(5)
+
+        self.play(part1_code.animate.scale(
+            final_scale).to_edge(UP).shift(LEFT))
+
+        part2_code.next_to(part1_code, DOWN, aligned_edge=LEFT)
+        part2_code.shift(UP * 0.3)
+        part2_code.shift(RIGHT * 0.5)
+        self.play(Write(part2_code), run_time=3)
+        self.wait(3)
+
+        # Fade out the entire scene
+        self.play(FadeOut(*self.mobjects))

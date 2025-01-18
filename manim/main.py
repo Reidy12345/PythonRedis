@@ -77,6 +77,291 @@ class ServerCode(Scene):
         self.play(FadeOut(*self.mobjects))
 
 
+class ServerCodeCont2(Scene):
+    def construct(self):
+
+        with open("../Server.py", "r") as file:
+            all_lines = file.readlines()
+            python_code = "".join(all_lines[37:55])
+
+        # Create a Code object with the Python code
+        code = Code(
+            code=python_code,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(0.8)
+
+        # self.play(FadeIn(code.line_numbers))
+
+        part1 = VGroup(*code.code[:15])
+        part2 = VGroup(*code.code[15:16])
+        part3 = VGroup(*code.code[16:])
+
+        self.play(FadeIn(part1), FadeIn(part2), FadeIn(part3), run_time=1)
+        self.wait(3)
+        self.play(FadeOut(part1), FadeOut(part3), run_time=1)
+
+        self.play(AnimationGroup(
+            part2.animate.move_to(ORIGIN).scale(1.5),
+            lag_ratio=0
+        ))
+
+        self.wait(2)
+        self.play(FadeOut(*self.mobjects))
+        self.wait(2)
+
+        with open("../Server.py", "r") as file:
+            python_code_2 = "".join(file.readlines()[7:35])
+
+        handle_request_code = Code(
+            code=python_code_2,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(1)
+
+        handle_request_code.move_to(ORIGIN)
+        handle_request_code.shift(DOWN * 4 + RIGHT)
+
+        handle_request_code_part_1 = VGroup(*handle_request_code.code[:3])
+
+        self.play(Write(handle_request_code_part_1), run_time=1)
+        self.wait(2)
+
+        self.play(FadeOut(handle_request_code_part_1), run_time=1)
+        self.wait(2)
+
+        with open("../ProtcolHandler.py", "r") as file:
+            python_code_3 = "".join(file.readlines()[11:35])
+
+        protocol_handler_code = Code(
+            code=python_code_3,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(0.7)
+
+        protocol_handler_code_part_1 = VGroup(*protocol_handler_code.code[:14])
+        protocol_handler_code_part_1.to_edge(LEFT)
+        protocol_handler_code_part_1.shift(RIGHT * 0.5)
+        protocol_handler_code_part_1.shift(DOWN)
+
+        protocol_handler_code_part_2 = VGroup(*protocol_handler_code.code[14:])
+        protocol_handler_code_part_2.to_edge(RIGHT)
+        protocol_handler_code_part_2.shift(LEFT * 0.5)
+
+        # Align tops using UP direction
+        protocol_handler_code_part_2.align_to(protocol_handler_code_part_1, UP)
+
+        self.play(Write(protocol_handler_code_part_1), run_time=3)
+        self.wait(5)
+
+        self.play(Write(protocol_handler_code_part_2), run_time=3)
+        self.wait(5)
+
+        self.play(FadeOut(protocol_handler_code_part_1),
+                  FadeOut(protocol_handler_code_part_2))
+
+        handle_request_code.move_to(ORIGIN)
+        handle_request_code.shift(DOWN * 2 + RIGHT * 0.5)
+        handle_request_code.scale(0.8)
+
+        handle_request_code_part_1_larger = VGroup(
+            *handle_request_code.code[:3])
+        handle_request_code_part_2_larger = VGroup(
+            *handle_request_code.code[3:11])
+        handle_request_code_part_3_larger = VGroup(
+            *handle_request_code.code[11:])
+
+        self.play(Write(handle_request_code_part_1_larger), run_time=1)
+        self.wait(2)
+
+        self.play(Write(handle_request_code_part_2_larger), run_time=1)
+        self.wait(2)
+
+        handle_request_code_part_1_and_2_larger = VGroup(
+            handle_request_code_part_1_larger, handle_request_code_part_2_larger)
+
+        with open("../ProtcolHandler.py", "r") as file:
+            python_code_4 = "".join(file.readlines()[7:10])
+
+        to_protocol_simple_string_code = Code(
+            code=python_code_4,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(0.8)
+
+        to_protocol_simple_string = VGroup(
+            *to_protocol_simple_string_code.code)
+
+        to_protocol_simple_string.next_to(
+            handle_request_code_part_1_and_2_larger, DOWN, buff=1)
+        to_protocol_simple_string.shift(RIGHT * 0.45)
+
+        self.play(Write(to_protocol_simple_string), run_time=1)
+        self.wait(2)
+        self.play(FadeOut(to_protocol_simple_string), run_time=1)
+        self.wait(2)
+
+        self.play(AnimationGroup(
+            handle_request_code_part_1_and_2_larger.animate.shift(
+                UP * 1.5 + LEFT * 0.5).scale(0.8),
+            lag_ratio=0
+        ))
+
+        handle_request_code_part_3_larger.scale(0.8)
+        handle_request_code_part_3_larger.next_to(
+            handle_request_code_part_1_and_2_larger, DOWN, buff=0.1)
+        handle_request_code_part_3_larger.shift(UP * 0.2 + RIGHT * 0.5)
+
+        self.play(Write(handle_request_code_part_3_larger), run_time=1)
+
+        self.wait(2)
+        self.play(FadeOut(*self.mobjects))
+        self.wait(2)
+
+
+class ServerCodeCont3(Scene):
+    def construct(self):
+
+        with open("../Server.py", "r") as file:
+            python_code_2 = "".join(file.readlines()[3:35])
+
+        handle_request_code = Code(
+            code=python_code_2,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",
+            language="python",
+        ).scale(0.8)
+
+        handle_request_code.move_to(ORIGIN)
+        handle_request_code.shift(DOWN * 2 + RIGHT * 0.5)
+
+        handle_request_code_part_0_larger = VGroup(
+            *handle_request_code.code[:2])
+        handle_request_code_part_1_larger = VGroup(
+            *handle_request_code.code[3:6])
+        handle_request_code_part_1_5_larger = VGroup(
+            *handle_request_code.code[6:7])
+        handle_request_code_part_2_larger = VGroup(
+            *handle_request_code.code[7:15])
+        handle_request_code_part_3_larger = VGroup(
+            *handle_request_code.code[15:])
+
+        self.play(Write(handle_request_code_part_1_larger), run_time=2)
+        self.wait(5)
+
+        self.play(Write(handle_request_code_part_1_5_larger), run_time=1)
+        self.wait(5)
+
+        self.play(Write(handle_request_code_part_2_larger), Write(
+            handle_request_code_part_0_larger), run_time=2)
+
+        self.wait(5)
+
+        handle_request_code_part_1_and_2_larger = VGroup(
+            handle_request_code_part_0_larger,
+            handle_request_code_part_1_larger,
+            handle_request_code_part_1_5_larger,
+            handle_request_code_part_2_larger)
+
+        with open("../ProtcolHandler.py", "r") as file:
+            python_code_4 = "".join(file.readlines()[7:10])
+
+        to_protocol_simple_string_code = Code(
+            code=python_code_4,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(0.8)
+
+        to_protocol_simple_string = VGroup(
+            *to_protocol_simple_string_code.code)
+
+        to_protocol_simple_string.next_to(
+            handle_request_code_part_1_and_2_larger, DOWN, buff=1)
+        to_protocol_simple_string.shift(RIGHT * 0.45)
+
+        self.play(Write(to_protocol_simple_string), run_time=1)
+        self.wait(2)
+        self.play(FadeOut(to_protocol_simple_string), run_time=1)
+        self.wait(2)
+
+        self.play(AnimationGroup(
+            handle_request_code_part_1_and_2_larger.animate.shift(
+                UP * 1.5 + LEFT * 0.5).scale(0.7),
+            lag_ratio=0,
+            run_time=1
+        ))
+
+        handle_request_code_part_3_larger.scale(0.7)
+        handle_request_code_part_3_larger.next_to(
+            handle_request_code_part_1_and_2_larger, DOWN, buff=0.1)
+        handle_request_code_part_3_larger.shift(UP * 0.2 + RIGHT * 0.5)
+
+        self.play(Write(handle_request_code_part_3_larger), run_time=3)
+
+        self.wait(2)
+        self.play(FadeOut(*self.mobjects))
+        self.wait(2)
+
+
+class ServerCodeCont4(Scene):
+    def construct(self):
+        with open("../Server.py", "r") as file:
+            all_lines = file.readlines()
+            python_code = "".join(all_lines[37:55])
+
+        # Create a Code object with the Python code
+        code = Code(
+            code=python_code,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",  # Style for syntax highlighting
+            language="python",  # Specify Python as the language
+        ).scale(0.8)
+
+        # self.play(FadeIn(code.line_numbers))
+
+        part1 = VGroup(*code.code[:15])
+        part2 = VGroup(*code.code[15:16])
+        part3 = VGroup(*code.code[16:])
+
+        # Store the original position of part2
+        original_position = part2.get_center()
+
+        part2.move_to(ORIGIN).scale(1.5),
+
+        self.play(FadeIn(part2), run_time=1)
+        self.wait(0.5)
+
+        # Move part2 back to its original position
+        self.play(part2.animate.move_to(original_position).scale(1 / 1.5))
+
+        self.wait(0.1)
+
+        self.play(FadeIn(part1), FadeIn(part3), run_time=1)
+
+        self.wait(4)
+        self.play(FadeOut(*self.mobjects))
+        self.wait(2)
+
+
 class ProtocolExplainerString(Scene):
     def construct(self):
 
@@ -672,6 +957,49 @@ class Benchmarks(Scene):
         self.wait(2)
 
 
+class ClientCodeFadeToRedisProtocolMethod(Scene):
+    def construct(self):
+        with open("../Client.py", "r") as file:
+            all_lines = file.readlines()
+            python_code = "".join(all_lines[5:27])
+
+        code = Code(
+            code=python_code,
+            tab_width=4,
+            line_spacing=0.5,
+            insert_line_no=True,
+            style="monokai",
+            language="python",
+        ).scale(0.75)
+
+        part1 = VGroup(*code.code[:5])
+        part2 = VGroup(*code.code[5:7])
+        part3 = VGroup(*code.code[7:9])
+        part4 = VGroup(*code.code[9:15])
+        part5 = VGroup(*code.code[15:])
+
+        self.play(Write(part1), run_time=0.1)
+        self.play(Write(part2), run_time=0.1)
+        self.play(Write(part3), run_time=0.1)
+        self.play(Write(part4), run_time=0.1)
+        self.play(Write(part5), run_time=0.1)
+        self.wait(2)
+
+        self.play(FadeOut(part1), FadeOut(part2),
+                  FadeOut(part4), FadeOut(part5))
+
+        self.wait(1)
+
+        self.play(AnimationGroup(
+            part3.animate.move_to(ORIGIN + UP * 0.5 + RIGHT * 3).scale(1.5),
+            lag_ratio=0
+        ))
+
+        self.wait(5)
+
+        self.play(FadeOut(*self.mobjects))
+
+
 class ToRedisProtocolMethod(Scene):
     def construct(self):
 
@@ -695,8 +1023,8 @@ class ToRedisProtocolMethod(Scene):
         part2_code = VGroup(*code.code[7:]).scale(final_scale)
 
         part1_code.move_to(ORIGIN)
-        self.play(Write(part1_code), run_time=3)
-        self.wait(5)
+        self.play(Write(part1_code), run_time=4)
+        self.wait(10)
 
         self.play(part1_code.animate.scale(
             final_scale).to_edge(UP).shift(LEFT))
@@ -707,5 +1035,4 @@ class ToRedisProtocolMethod(Scene):
         self.play(Write(part2_code), run_time=3)
         self.wait(3)
 
-        # Fade out the entire scene
         self.play(FadeOut(*self.mobjects))

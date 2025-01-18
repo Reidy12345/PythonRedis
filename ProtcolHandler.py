@@ -1,12 +1,12 @@
 import re
 
 
-def from_protocol_simple_string(str):
-    return str.split('\r\n')[0][1:]
+def from_protocol_simple_string(s):
+    return s.split('\r\n')[1]
 
 
-def to_protocol_simple_string(str):
-    return '+' + str + '\r\n'
+def to_protocol_simple_string(s):
+    return '$' + str(len(s)) + '\r\n' + s + '\r\n'
 
 
 def to_protocol_array(array):
@@ -47,7 +47,6 @@ def to_redis_protocol(command):
     match = re.match(simple_set_pattern, command)
     if match:
         values = match.group(1).strip().split()
-        print('values', values)
         return to_protocol_array(['SET'] + values)
 
     simple_delete_pattern = r'DELETE (\w+)'
